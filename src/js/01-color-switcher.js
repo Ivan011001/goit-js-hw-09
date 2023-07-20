@@ -16,7 +16,6 @@ let intervalId;
 
 startBtnRef.addEventListener('click', handleStartClick);
 stopBtnRef.addEventListener('click', handleStopClick);
-document.body.addEventListener('durationchange', () => {});
 
 function handleStartClick(evt) {
   generateBodyColor();
