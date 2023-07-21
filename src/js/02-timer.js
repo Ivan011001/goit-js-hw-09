@@ -39,13 +39,13 @@ const options = {
           outputsRef.days.textContent === '00' &&
           outputsRef.hours.textContent === '00' &&
           outputsRef.minutes.textContent === '00' &&
-          outputsRef.seconds.textContent === '06'
+          outputsRef.seconds.textContent === '01'
         ) {
-          Notify.success('Your timer has almost ended!');
-          setTimeout(() => {
-            clearInterval(intervalId);
-            location.reload();
-          }, 5000);
+          Notify.success('Your timer has  ended!');
+          clearInterval(intervalId);
+          setCurrentTime(Date.now());
+          buttonsRef.stop.disabled = true;
+          timeRef.disabled = false;
         }
 
         setCurrentTime(selectedDates[0]);
