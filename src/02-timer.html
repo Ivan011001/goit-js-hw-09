@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="css/common.css" />
     <style>
       #datetime-picker {
-        padding: 10px 20px;
+        padding: 10px 120px 10px 12px;
         border-radius: 10px;
         border: 1px solid grey;
       }
@@ -63,13 +63,36 @@
       .value {
         font-size: 35;
       }
+
+      .interactive-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: start;
+        gap: 25px;
+      }
+
+      .button-container {
+        display: flex;
+        gap: 20px;
+      }
+
+      .resume-btn {
+        display: none;
+      }
     </style>
   </head>
   <body>
     <p><a href="index.html">Go back</a></p>
 
-    <input type="text" id="datetime-picker" />
-    <button type="button" data-start disabled>Start</button>
+    <div class="interactive-wrapper">
+      <input type="text" id="datetime-picker" />
+      <div class="button-container">
+        <button type="button" data-start disabled>Start</button>
+        <button type="button" data-reset disabled>Reset</button>
+        <button type="button" data-stop disabled>Stop</button>
+        <button type="button" class="resume-btn" data-resume>Resume</button>
+      </div>
+    </div>
 
     <div class="timer">
       <div class="field">
