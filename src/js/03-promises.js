@@ -25,7 +25,7 @@ formRef.addEventListener('submit', evt => {
   const mainStep = Number(step.value);
   const mainAmount = Number(amount.value);
 
-  if (mainDelay <= 0 || mainStep <= 0 || mainAmount <= 0) {
+  if (mainDelay < 0 || mainStep < 0 || mainAmount <= 0) {
     return Notify.info('Unfortunately, your input is invalid');
   }
 

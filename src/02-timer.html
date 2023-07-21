@@ -17,7 +17,13 @@
         border: 1px solid blue;
       }
 
-      [data-start] {
+      #datetime-picker:disabled:hover,
+      #datetime-picker:disabled:focus {
+        border: 1px solid grey;
+        cursor: auto;
+      }
+
+      button {
         background-color: transparent;
         border: 1px solid grey;
         padding: 8.7px 20px;
@@ -27,17 +33,17 @@
         border-radius: 10px;
       }
 
-      [data-start]:disabled {
+      button:disabled {
         cursor: auto;
       }
 
-      [data-start]:hover,
-      [data-start]:focus {
+      button:hover,
+      button:focus {
         border: 1px solid blue;
       }
 
-      [data-start]:disabled:hover,
-      [data-start]:disabled:focus {
+      button:disabled:hover,
+      button:disabled:focus {
         border: 1px solid grey;
       }
 

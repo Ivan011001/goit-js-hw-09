@@ -28,32 +28,31 @@ const options = {
 
     startBtnRef.disabled = false;
 
-    startBtnRef.addEventListener('click', () => {
-      setCurrentTime(selectedDates[0]);
+    startBtnRef.addEventListener('click', startButtonActive);
 
+    function startButtonActive() {
+      startBtnRef.disabled = true;
+      inputRef.disabled = true;
+
+      setCurrentTime(selectedDates[0]);
       intervalId = setInterval(() => {
         setCurrentTime(selectedDates[0]);
       }, 1000);
-    });
+    }
   },
 };
 
 const fp = flatpickr(inputRef, options);
 
 function convertMs(ms) {
-  // Number of milliseconds per unit of time
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
 
-  // Remaining days
   const days = Math.floor(ms / day);
-  // Remaining hours
   const hours = Math.floor((ms % day) / hour);
-  // Remaining minutes
   const minutes = Math.floor(((ms % day) % hour) / minute);
-  // Remaining seconds
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
@@ -79,5 +78,6 @@ function isTimerOver({ days, hours, minutes, seconds }) {
     Notify.info('Your timer is over', {
       timeout: 1500,
     });
+    inputRef.disabled = false;
   }
 }
