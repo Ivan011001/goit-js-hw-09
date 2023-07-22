@@ -25,13 +25,11 @@ const options = {
   onClose(selectedDates) {
     if (selectedDates[0] < Date.now()) {
       setCurrentTime(Date.now());
-      playSound();
       return Notify.failure('Please choose a date in the future');
     }
 
     buttonsRef.start.disabled = false;
     buttonsRef.start.addEventListener('click', evt => {
-      playSound();
       Notify.success('Your timer has started!');
       setCurrentTime(selectedDates[0]);
 
@@ -42,7 +40,6 @@ const options = {
           outputsRef.minutes.textContent === '00' &&
           outputsRef.seconds.textContent === '06'
         ) {
-          playSound();
           Notify.success('Your timer has almost ended!', {
             timeout: 5000,
           });
@@ -63,7 +60,6 @@ const options = {
     });
 
     buttonsRef.stop.addEventListener('click', evt => {
-      playSound();
       Notify.warning('You have stopped the timer!');
       clearInterval(intervalId);
 
@@ -104,9 +100,4 @@ function convertMs(ms) {
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
-}
-
-function playSound() {
-  const sound = new Audio('../sound/mixkit-long-pop-2358.wav');
-  sound.play();
 }
