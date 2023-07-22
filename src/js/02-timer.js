@@ -7,7 +7,6 @@ const buttonsRef = {
   start: document.querySelector('[data-start]'),
   reset: document.querySelector('[data-reset]'),
   stop: document.querySelector('[data-stop]'),
-  resume: document.querySelector('[data-resume]'),
 };
 const outputsRef = {
   days: document.querySelector('[data-days]'),
@@ -39,13 +38,17 @@ const options = {
           outputsRef.days.textContent === '00' &&
           outputsRef.hours.textContent === '00' &&
           outputsRef.minutes.textContent === '00' &&
-          outputsRef.seconds.textContent === '01'
+          outputsRef.seconds.textContent === '06'
         ) {
-          Notify.success('Your timer has  ended!');
-          clearInterval(intervalId);
-          setCurrentTime(Date.now());
-          buttonsRef.stop.disabled = true;
-          timeRef.disabled = false;
+          Notify.success('Your timer has almost ended!', {
+            timeout: 5000,
+          });
+          const endTimeoutId = setTimeout(() => {
+            clearInterval(intervalId);
+            setCurrentTime(Date.now());
+            location.reload();
+            clearTimeout(endTimeoutId);
+          }, 5000);
         }
 
         setCurrentTime(selectedDates[0]);
@@ -59,35 +62,19 @@ const options = {
     buttonsRef.stop.addEventListener('click', evt => {
       Notify.warning('You have stopped the timer!');
       clearInterval(intervalId);
+
       setCurrentTime(selectedDates[0]);
 
-      buttonsRef.resume.classList.toggle('resume-btn');
-      buttonsRef.stop.disabled = true;
       buttonsRef.reset.disabled = false;
+      buttonsRef.stop.disabled = true;
     });
 
-    buttonsRef.resume.addEventListener('click', evt => {
-      Notify.success('Your timer has started!');
-      setCurrentTime(selectedDates[0]);
-      intervalId = setInterval(() => {
-        setCurrentTime(selectedDates[0]);
-      }, 1000);
-
-      buttonsRef.resume.classList.toggle('resume-btn');
-      buttonsRef.stop.disabled = false;
-      buttonsRef.reset.disabled = true;
-    });
-
-    buttonsRef.reset.addEventListener('click', evt => {
-      Notify.info('You have reseted the timer!');
-      buttonsRef.resume.classList.toggle('resume-btn');
-      setCurrentTime(Date.now());
-      buttonsRef.reset.disabled = true;
-      timeRef.disabled = false;
-      buttonsRef.start.disabled = false;
+    buttonsRef.reset.addEventListener('click', () => {
+      location.reload();
     });
   },
 };
+
 const fp = flatpickr(timeRef, options);
 
 function setCurrentTime(selectedTime) {
