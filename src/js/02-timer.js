@@ -3,6 +3,7 @@ import 'flatpickr/dist/flatpickr.min.css';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
 const timeRef = document.querySelector('#datetime-picker');
+const audioRef = document.querySelector('audio');
 const buttonsRef = {
   start: document.querySelector('[data-start]'),
   reset: document.querySelector('[data-reset]'),
@@ -25,11 +26,13 @@ const options = {
   onClose(selectedDates) {
     if (selectedDates[0] < Date.now()) {
       setCurrentTime(Date.now());
+      audioRef.play();
       return Notify.failure('Please choose a date in the future');
     }
 
     buttonsRef.start.disabled = false;
     buttonsRef.start.addEventListener('click', evt => {
+      audioRef.play();
       Notify.success('Your timer has started!');
       setCurrentTime(selectedDates[0]);
 
@@ -40,6 +43,7 @@ const options = {
           outputsRef.minutes.textContent === '00' &&
           outputsRef.seconds.textContent === '06'
         ) {
+          audioRef.play();
           Notify.success('Your timer has almost ended!', {
             timeout: 5000,
           });
@@ -60,6 +64,7 @@ const options = {
     });
 
     buttonsRef.stop.addEventListener('click', evt => {
+      audioRef.play();
       Notify.warning('You have stopped the timer!');
       clearInterval(intervalId);
 
