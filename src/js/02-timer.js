@@ -6,8 +6,6 @@ const timeRef = document.querySelector('#datetime-picker');
 const audioRef = document.querySelector('audio');
 const buttonsRef = {
   start: document.querySelector('[data-start]'),
-  reset: document.querySelector('[data-reset]'),
-  stop: document.querySelector('[data-stop]'),
 };
 const outputsRef = {
   days: document.querySelector('[data-days]'),
@@ -16,6 +14,7 @@ const outputsRef = {
   seconds: document.querySelector('[data-seconds]'),
 };
 
+let userTime;
 let intervalId;
 
 const options = {
@@ -24,65 +23,39 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-    if (selectedDates[0] < Date.now()) {
+    userTime = selectedDates[0];
+
+    if (userTime < Date.now()) {
       setCurrentTime(Date.now());
       audioRef.play();
       return Notify.failure('Please choose a date in the future');
     }
 
     buttonsRef.start.disabled = false;
-    buttonsRef.start.addEventListener('click', evt => {
-      audioRef.play();
-      Notify.success('Your timer has started!');
-      setCurrentTime(selectedDates[0]);
-
-      intervalId = setInterval(() => {
-        if (
-          outputsRef.days.textContent === '00' &&
-          outputsRef.hours.textContent === '00' &&
-          outputsRef.minutes.textContent === '00' &&
-          outputsRef.seconds.textContent === '06'
-        ) {
-          audioRef.play();
-          Notify.success('Your timer has almost ended!', {
-            timeout: 5000,
-          });
-          const endTimeoutId = setTimeout(() => {
-            clearInterval(intervalId);
-            setCurrentTime(Date.now());
-            location.reload();
-            clearTimeout(endTimeoutId);
-          }, 5000);
-        }
-
-        setCurrentTime(selectedDates[0]);
-      }, 1000);
-
-      timeRef.disabled = true;
-      buttonsRef.start.disabled = true;
-      buttonsRef.stop.disabled = false;
-    });
-
-    buttonsRef.stop.addEventListener('click', evt => {
-      audioRef.play();
-      Notify.warning('You have stopped the timer!');
-      clearInterval(intervalId);
-
-      setCurrentTime(selectedDates[0]);
-
-      buttonsRef.reset.disabled = false;
-      buttonsRef.stop.disabled = true;
-    });
-
-    buttonsRef.reset.addEventListener('click', () => {
-      location.reload();
-    });
+    buttonsRef.start.addEventListener('click', startBtnClickHandler);
   },
 };
 
 const fp = flatpickr(timeRef, options);
 
 function setCurrentTime(selectedTime) {
+  if (
+    outputsRef.days.textContent === '00' &&
+    outputsRef.hours.textContent === '00' &&
+    outputsRef.minutes.textContent === '00' &&
+    outputsRef.seconds.textContent === '01'
+  ) {
+    setTimeout(() => {
+      buttonsRef.start.removeEventListener('click', startBtnClickHandler);
+
+      timeRef.disabled = false;
+      clearInterval(intervalId);
+      audioRef.play();
+      return Notify.success('Your timer has ended!', {
+        timeout: 5000,
+      });
+    });
+  }
   addLeadingZero(convertMs(selectedTime - Date.now()));
 }
 
@@ -105,4 +78,17 @@ function convertMs(ms) {
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
+}
+
+function startBtnClickHandler() {
+  audioRef.play();
+  Notify.success('Your timer has started!');
+  setCurrentTime(userTime);
+
+  intervalId = setInterval(() => {
+    setCurrentTime(userTime);
+  }, 1000);
+
+  timeRef.disabled = true;
+  buttonsRef.start.disabled = true;
 }
